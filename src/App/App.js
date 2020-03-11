@@ -6,6 +6,7 @@ import NotePageNav from '../NotePageNav/NotePageNav';
 import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
 import dummyStore from '../dummy-store';
+import NotefulContext from '../NotefulContext';
 import {getNotesForFolder, findNote, findFolder} from '../notes-helpers';
 import './App.css';
 
@@ -90,9 +91,17 @@ class App extends Component {
     }
 
     render() {
+        const contextValue ={ 
+            folders: this.state.folders, 
+            notes: this.state.notes,
+            deleteNotes: this.deleteNotes }
+
         return (
+            
             <div className="App">
+                <NotefulContext.Provider value={contextValue}>
                 <nav className="App__nav">{this.renderNavRoutes()}</nav>
+                </NotefulContext.Provider>
                 <header className="App__header">
                     <h1>
                         <Link to="/">Noteful</Link>{' '}
