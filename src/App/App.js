@@ -9,21 +9,69 @@ import dummyStore from '../dummy-store';
 import NotefulContext from '../NotefulContext';
 import {getNotesForFolder, findNote, findFolder} from '../notes-helpers';
 import './App.css';
+import config from '../config';
 
 class App extends Component {
     state = {
         notes: [],
         folders: []
     };
+
+
     deleteNotes = noteId =>{
         const newNotes = this.state.notes.filter(n => n.id !== noteId)
         this.setState({
             notes:newNotes
         })
     }
+    handleFolderFetch = ()=>{
+        fetch(config.API_ENDPOINT + `/folders`)
+        .then(res=>{
+            if(!res.ok){
+                return res.json().then(error=>{
+                  throw error
+                })
+              }
+              return res.json()
+            })
+            .then(data =>{
+              console.log(data)
+              this.setState({folders: data})
+            //   data.map(folder =>{
+            //     return folder.id
+            //     })
+            })
+            .catch(error =>{
+              console.error(error)
+            })
+    }
+
+    handleNoteFetch = ()=>{
+        fetch(config.API_ENDPOINT + `/notes`)
+        .then(res=>{
+            if(!res.ok){
+                return res.json().then(error=>{
+                  throw error
+                })
+              }
+              return res.json()
+            })
+            .then(data =>{
+              console.log(data)
+              this.setState({notes: data})
+            //   data.map(folder =>{
+            //     return folder.id
+            //     })
+            })
+            .catch(error =>{
+              console.error(error)
+            })
+    }
     componentDidMount() {
         // fake date loading from API call
-        setTimeout(() => this.setState(dummyStore), 600);
+        this.handleFolderFetch();
+        this.handleNoteFetch();
+        
     }
 
     renderNavRoutes() {
@@ -81,6 +129,8 @@ class App extends Component {
                                 />
                             );
                         }}
+
+                        // component = {NoteListMain}
                     />
                 ))}
                 <Route
@@ -90,6 +140,7 @@ class App extends Component {
                         const note = findNote(notes, noteId);
                         return <NotePageMain {...routeProps} note={note} />;
                     }}
+                    // component={NotePageMain}
                 />
             </>
         );
