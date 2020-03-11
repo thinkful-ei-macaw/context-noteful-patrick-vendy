@@ -15,7 +15,12 @@ class App extends Component {
         notes: [],
         folders: []
     };
-
+    deleteNotes = noteId =>{
+        const newNotes = this.state.notes.filter(n => n.id !== noteId)
+        this.setState({
+            notes:newNotes
+        })
+    }
     componentDidMount() {
         // fake date loading from API call
         setTimeout(() => this.setState(dummyStore), 600);
